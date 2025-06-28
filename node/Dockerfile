@@ -12,4 +12,4 @@ COPY vigah-api/ .
 
 EXPOSE ${NODE_PORT}
 
-CMD ["node", "server.js"]
+CMD ["npm", "start"]
