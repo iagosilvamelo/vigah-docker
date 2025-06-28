@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: ./docker/node/Dockerfile
+    container_name: ${PROJECT_NAME}-api
+    ports:
+      - "${NODE_PORT}:${NODE_PORT}"
+    volumes:
+      - ../vigah-api:/app
+      - /app/node_modules
+    environment:
+      DATABASE_URL: ${DATABASE_URL} 
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  client:
+    build:
+      context: ..
+      dockerfile: ./docker/client/Dockerfile
+    container_name: ${PROJECT_NAME}-client
+    ports:
+      - "${VUE_PORT}:80"
+    volumes:
+      - ../vigah-client:/app
+      - /app/node_modules
+    networks:
+      - app-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: ${PROJECT_NAME}-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge
