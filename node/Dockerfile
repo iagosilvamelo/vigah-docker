@@ -11,6 +11,7 @@ RUN apk add --no-cache python3 make g++ && \
 
 COPY vigah-api/ .
 
+RUN npm install --global @adonisjs/cli
 RUN npm install
 
 EXPOSE ${NODE_PORT}
